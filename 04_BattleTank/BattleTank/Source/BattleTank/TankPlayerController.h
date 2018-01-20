@@ -2,7 +2,10 @@
 
 #pragma once
 
+
 #include "Tank.h"
+#include "Engine.h"
+#include "Engine/World.h"
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "TankPlayerController.generated.h"
@@ -23,12 +26,26 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	bool GetSightRayHitLocation(FVector& HitLocationOUT) const;
+	bool GetSightRayHitLocation(FVector& HitLocationOUT);
+
+	bool GetLookDirection(FVector2D CrosshairPos, FVector& LookDir);
 	
 private:
+
+	UPROPERTY(EditAnywhere)
+		float CrosshairXLocation=0.5;
+
+	UPROPERTY (EditAnywhere)
+		float CrosshairYLocation=0.3333;
+
+	UPROPERTY(EditAnywhere)
+		int32 LineTraceRange = 100000;
+		
 
 	//start the tank moving tha barel tovards crosshair 
 	void AimTowardsCrosshair();
 
+	//function that gets viewport size
+	FVector2D GetGameViewportSize();
 
 };

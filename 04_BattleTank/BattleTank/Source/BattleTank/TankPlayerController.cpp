@@ -27,26 +27,47 @@ void ATankPlayerController::Tick(float DeltaTime)
 	AimTowardsCrosshair();
 }
 
-bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocationOUT) const
+bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocationOUT)
 {
-/*	
-	//we have strat and end of the vector. 
-	//Start - location of point conwertetd from screen to world space,
-	// End - some distance
-		//if this vector penetrate something
-			//- get location of hit
-			//- generert hit result
-	FHitResult* Hit;
-	if (GetHitResultAtScreenPosition((50.0f, 33.3f), ECC_WorldStatic, true, Hit) == true)
-	{
-		HitLocationOUT = Hit->GetActor()->GetActorLocation();
-	}
-	
-	//APlayerController::DeprojectScreenPositionToWorld(33.3,33.3,)
+	//find the crosshair position
+	FVector2D ScreenSize = GetGameViewportSize();
+	FVector2D CrosshairPos = FVector2D((ScreenSize.X*CrosshairXLocation), (ScreenSize.Y*CrosshairYLocation));
 
-	*/
-	HitLocationOUT = FVector(1);
+	// deproject the screen position fo the crosshair to world direction
+	FVector WorldDir;
+	if (GetLookDirection(CrosshairPos, WorldDir))
+	{
+		
+		//linetrease along that look direction? and see what we hit ( up to max renge - start\end hit result)
+		FHitResult HitResult;  //The trace data is stored here
+		FVector Start = PlayerCameraManager->GetCameraLocation();
+		FVector End = Start + WorldDir * LineTraceRange; //10000 units in facing direction of PC (10000 units in front of the camera)
+		GetWorld()->LineTraceSingleByChannel(
+			HitResult,
+			Start,
+			End,
+			ECollisionChannel::ECC_Visibility);
+			UE_LOG(LogTemp, Warning, TEXT(" HitData: %s "), *HitResult.ToString());
+			HitLocationOUT = HitResult.Location;
+			return true;  
+	
+
+		
+	}
 	return true;
+}
+
+bool ATankPlayerController::GetLookDirection(FVector2D CrosshairPos, FVector& LookDir )
+{
+	
+	FVector CameraWorldLoc;
+	return DeprojectScreenPositionToWorld(
+		CrosshairPos.X,
+		CrosshairPos.Y,
+		CameraWorldLoc,
+		LookDir);
+
+	
 }
 
 void ATankPlayerController::AimTowardsCrosshair()
@@ -74,6 +95,17 @@ ATank* ATankPlayerController::GetControlledTank() const
 	return Cast<ATank>(GetPawn());
 }
 
+FVector2D ATankPlayerController::GetGameViewportSize()
+{
+	FVector2D Result = FVector2D(1, 1);
+
+	if (GEngine && GEngine->GameViewport)
+	{
+		GEngine->GameViewport->GetViewportSize( /*out*/Result);
+	}
+
+	return Result;
+}
 
 
 
