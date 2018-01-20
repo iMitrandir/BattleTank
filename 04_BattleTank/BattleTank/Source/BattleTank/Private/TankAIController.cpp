@@ -2,6 +2,9 @@
 
 #include "TankAIController.h"
 
+
+
+
 void ATankAIController::BeginPlay()
 {
 	Super::BeginPlay();
@@ -17,16 +20,24 @@ void ATankAIController::BeginPlay()
 		UE_LOG(LogTemp, Warning, TEXT("AI Controller nulptr"));
 	}
 
-	if (PlayerTank)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("AI Tank find %s"), *PlayerTank->GetName());
-	}
-	else
+	if (!PlayerTank)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("AI Tank can't find PT"));
 	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AI Tank find %s"), *PlayerTank->GetName());
+
+	}
 
 }
+
+void ATankAIController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
+
 
 ATank* ATankAIController::GetControlledTank() const
 {
