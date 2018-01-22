@@ -30,12 +30,14 @@ void ATankPlayerController::Tick(float DeltaTime)
 bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocationOUT)
 {
 	//find the crosshair position
-	FVector2D ScreenSize = GetGameViewportSize();
-	FVector2D CrosshairPos = FVector2D((ScreenSize.X*CrosshairXLocation), (ScreenSize.Y*CrosshairYLocation));
+	int32 ViewportSizeX, ViewportSizeY;
+	GetViewportSize(ViewportSizeX, ViewportSizeY);
+
+	FVector2D ScreenLocation = FVector2D(ViewportSizeX*CrosshairXLocation, ViewportSizeY*CrosshairYLocation);
 
 	// deproject the screen position fo the crosshair to world direction
 	FVector WorldDir;
-	if (GetLookDirection(CrosshairPos, WorldDir))
+	if (GetLookDirection(ScreenLocation, WorldDir))
 	{
 		
 		//linetrease along that look direction? and see what we hit ( up to max renge - start\end hit result)
@@ -47,28 +49,34 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocationOUT)
 			Start,
 			End,
 			ECollisionChannel::ECC_Visibility);
-			UE_LOG(LogTemp, Warning, TEXT(" HitData: %s "), *HitResult.ToString());
-			HitLocationOUT = HitResult.Location;
+		//UE_LOG(LogTemp, Warning, TEXT(" HitData: %s "), *HitResult.ToString());
+		HitLocationOUT = HitResult.Location;
 			return true;  
 	
 
 		
 	}
-	return true;
+	else
+	{
+		return false;
+	}
+	
 }
 
-bool ATankPlayerController::GetLookDirection(FVector2D CrosshairPos, FVector& LookDir )
+bool ATankPlayerController::GetLookDirection(FVector2D ScreenLocation, FVector& LookDir )
 {
 	
 	FVector CameraWorldLoc;
 	return DeprojectScreenPositionToWorld(
-		CrosshairPos.X,
-		CrosshairPos.Y,
+		ScreenLocation.X,
+		ScreenLocation.Y,
 		CameraWorldLoc,
 		LookDir);
 
 	
 }
+
+
 
 void ATankPlayerController::AimTowardsCrosshair()
 {
@@ -78,10 +86,7 @@ void ATankPlayerController::AimTowardsCrosshair()
 
 	if (GetSightRayHitLocation(HitLocation))
 	{
-		UE_LOG(LogTemp, Warning, TEXT(" Hit Location: %s "), *HitLocation.ToString());
-		//Get world location of linetrace through crosshair
-		//if it hits the landscape
-		//tell controller tank to aim at this point
+		GetControlledTank()->AimAt(HitLocation);
 
 	}
 
@@ -106,6 +111,4 @@ FVector2D ATankPlayerController::GetGameViewportSize()
 
 	return Result;
 }
-
-
 

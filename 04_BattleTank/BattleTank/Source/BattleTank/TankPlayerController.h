@@ -29,6 +29,8 @@ public:
 	bool GetSightRayHitLocation(FVector& HitLocationOUT);
 
 	bool GetLookDirection(FVector2D CrosshairPos, FVector& LookDir);
+
+
 	
 private:
 
