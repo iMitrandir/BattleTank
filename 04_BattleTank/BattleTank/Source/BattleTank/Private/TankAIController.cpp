@@ -8,6 +8,8 @@
 void ATankAIController::BeginPlay()
 {
 	Super::BeginPlay();
+	PrimaryActorTick.bCanEverTick = true;
+
 	UE_LOG(LogTemp, Warning, TEXT("Player Controller Begin Play"));
 	auto PlayerTank = GetPlayerTank();
 	APawn* PosessedTank = GetControlledTank();
@@ -35,9 +37,8 @@ void ATankAIController::BeginPlay()
 void ATankAIController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	AimTowardsPlayer();
 }
-
 
 ATank* ATankAIController::GetControlledTank() const
 {
@@ -54,6 +55,21 @@ ATank* ATankAIController::GetPlayerTank() const
 		return nullptr;
 	}
 	return Cast<ATank>(PlayerTank);
+}
+void ATankAIController::AimTowardsPlayer()
+{
+	if (GetPlayerTank())  // если нету плеер танка ничего не делаем
+	{
+		//TODO move to player
+
+		//Aim tovards the player
+		auto PlayerLocation = GetPlayerTank()->GetActorLocation();
+		GetControlledTank()->AimAt(PlayerLocation);
+
+		
+	}
+
+	
 }
 
 
