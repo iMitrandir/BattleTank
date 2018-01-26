@@ -39,11 +39,44 @@ void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 
 void UTankAimingComponent::AimAt(FVector HitLocation, float LounchSpeed)
 {
-	/*
-	auto OurTankName = GetOwner()->GetName();
-	auto BarrelPosition = Barrel->GetComponentLocation();
-	*/
-	
-	UE_LOG(LogTemp, Warning, TEXT(" Firing at %f "), LounchSpeed);
-	
+
+	if (!Barrel) { return; }
+
+	FVector OutLaunchVelocity;
+	FVector StartLocation = Barrel->GetSocketLocation(FName("Projectile"));
+
+	//calculate the out lounch velocity
+
+	if (UGameplayStatics::SuggestProjectileVelocity
+		(
+		this,
+		OutLaunchVelocity,
+		StartLocation,
+		HitLocation,
+		LounchSpeed,
+		ESuggestProjVelocityTraceOption::DoNotTrace
+			)
+		)
+	{
+		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
+		auto TankName = GetOwner()->GetName();
+		//UE_LOG(LogTemp, Warning, TEXT(" %s aiming at %f "), *TankName, *AimDirection.ToString());
+
+		MoveBarrelTowards(AimDirection);
+	}
+
+
 }
+
+void UTankAimingComponent::MoveBarrelTowards(FVector AimDirrection)
+{
+	// work-out the difference between current barrel rotation and aim dirrection
+	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
+	auto AimAsRotator = AimDirrection.Rotation();
+	auto DeltaRotator = AimAsRotator - BarrelRotator;
+
+	//Move te barrel the right ammount THIS frame
+
+
+}
+	

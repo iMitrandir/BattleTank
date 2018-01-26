@@ -2,8 +2,11 @@
 
 #pragma once
 
+
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Components/StaticMeshComponent.h"
 #include "TankAimingComponent.generated.h"
 
 
@@ -31,5 +34,7 @@ public:
 	
 private:
 
-	UStaticMeshComponent * Barrel = nullptr;
+	UStaticMeshComponent *Barrel = nullptr;
+
+	void MoveBarrelTowards(FVector AimDirrection);
 };
