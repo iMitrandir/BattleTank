@@ -45,5 +45,5 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LounchSpeed)
 	*/
 	
 	UE_LOG(LogTemp, Warning, TEXT(" Firing at %f "), LounchSpeed);
-
+	
 }
