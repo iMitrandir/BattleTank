@@ -3,7 +3,7 @@
 
 
 #include "TankPlayerController.h"
-
+#include "Tank.h"
 
 
 void ATankPlayerController::BeginPlay()
@@ -35,7 +35,7 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocationOUT)
 	int32 ViewportSizeX, ViewportSizeY;
 	GetViewportSize(ViewportSizeX, ViewportSizeY);
 
-	FVector2D ScreenLocation = FVector2D(ViewportSizeX*CrosshairXLocation, ViewportSizeY*CrosshairYLocation);
+	auto ScreenLocation = FVector2D(ViewportSizeX * CrosshairXLocation, ViewportSizeY * CrosshairYLocation);
 
 	// deproject the screen position fo the crosshair to world direction
 	FVector WorldDir;

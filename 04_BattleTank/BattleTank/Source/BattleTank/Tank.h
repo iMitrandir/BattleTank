@@ -3,10 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "TankAimingComponent.h"
 #include "GameFramework/Pawn.h"
 #include "Tank.generated.h"
 
+class UTankAimingComponent;
 class UTankBarrel;
 
 UCLASS()
@@ -32,8 +32,6 @@ protected:
 
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -41,6 +39,6 @@ public:
 private:
 
 	UPROPERTY(EditAnywhere, Category = "Firing")
-		float LounchSpeed=10000; //TODO find sensible speed value
+		float LounchSpeed=1000; //TODO find sensible speed value
 	
 };
