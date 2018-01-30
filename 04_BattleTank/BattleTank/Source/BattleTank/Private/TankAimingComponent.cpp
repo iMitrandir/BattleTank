@@ -2,6 +2,7 @@
 
 #include "TankAimingComponent.h"
 #include "TankBarrel.h"
+#include "TankTurret.h"
 
 
 // Sets default values for this component's properties
@@ -18,6 +19,10 @@ UTankAimingComponent::UTankAimingComponent()
 void UTankAimingComponent::SetBarrelReference(UTankBarrel * BarrelToSet)
 {
 	Barrel = BarrelToSet;
+}
+void UTankAimingComponent::SetTurretReference(UTankTurret * TurretToSet)
+{
+	Turret = TurretToSet;
 }
 
 // Called when the game starts
@@ -40,7 +45,7 @@ void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 
 void UTankAimingComponent::AimAt(FVector HitLocation, float LounchSpeed)
 {
-
+	if (!Turret) { return; }
 	if (!Barrel) { return; }
 
 	FVector OutLaunchVelocity;
@@ -64,8 +69,8 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LounchSpeed)
 	{
 		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
 		MoveBarrelTowards(AimDirection);
-		auto Time = GetWorld()->GetTimeSeconds();
-		UE_LOG(LogTemp, Warning, TEXT("%f Aim Sollution was found "), Time);
+
+		
 	}
 	else
 	{
@@ -80,10 +85,15 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirrection)
 {
 	// work-out the difference between current barrel rotation and aim dirrection
 	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
+	auto TurretRotator = Turret->GetForwardVector().Rotation();
 	auto AimAsRotator = AimDirrection.Rotation();
-	auto DeltaRotator = AimAsRotator - BarrelRotator;
+	auto DeltaBarrelRotator = AimAsRotator - BarrelRotator;
+	auto DeltaTurretRotator = AimAsRotator - TurretRotator;
 
-	Barrel->Elevate(DeltaRotator.Pitch); //TODO remove magic number
-
+	Barrel->Elevate(DeltaBarrelRotator.Pitch); 
+	Turret->Elevate(DeltaTurretRotator.Yaw);
+	UE_LOG(LogTemp, Warning, TEXT("Rotate at %f  "), DeltaTurretRotator.Yaw);
 }
+
+
 	
