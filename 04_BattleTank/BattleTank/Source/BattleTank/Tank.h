@@ -57,5 +57,5 @@ private:
 
 	// local barrel refernce for spawning
 	UTankBarrel* Barrel = nullptr;
-	
+
 };
