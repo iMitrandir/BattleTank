@@ -20,6 +20,4 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void AimTowardsPlayer(ATank* ControlledTank, ATank* PlayerTank);
-
 };

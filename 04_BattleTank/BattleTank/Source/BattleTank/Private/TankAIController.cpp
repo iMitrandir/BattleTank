@@ -20,24 +20,16 @@ void ATankAIController::Tick(float DeltaTime)
 	
 	auto ControlledTank = Cast<ATank>(GetPawn());
 	auto PlayerTank = Cast<ATank>(GetWorld()->GetFirstPlayerController()->GetPawn());
-	AimTowardsPlayer(ControlledTank, PlayerTank);
-	ControlledTank->Fire();
-}
-
-void ATankAIController::AimTowardsPlayer(ATank* ControlledTank, ATank* PlayerTank)
-{
 	if (PlayerTank)  // если нету плеер танка ничего не делаем
 	{
 		//TODO move to player
 
 		//Aim tovards the player
-		auto PlayerLocation = PlayerTank->GetActorLocation();
-		ControlledTank->AimAt(PlayerLocation);
-
-		
+		ControlledTank->AimAt(PlayerTank->GetActorLocation());
 	}
-
 	
+	ControlledTank->Fire(); //TODO dont fire every frame
 }
+
 
 
