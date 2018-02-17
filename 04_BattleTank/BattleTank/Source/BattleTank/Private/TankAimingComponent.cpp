@@ -74,11 +74,11 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LounchSpeed)
 
 		
 	}
-	else
+	/*else
 	{
 		auto Time = GetWorld()->GetTimeSeconds();
 		UE_LOG(LogTemp, Warning, TEXT("%f No Aim sollution found "), Time);
-	}
+	}*/
 
 
 }
