@@ -6,6 +6,7 @@
 #include "GameFramework/NavMovementComponent.h"
 #include "TankMovementComponent.generated.h"
 
+class UTankTrack;
 /**
  * 
  */
@@ -19,6 +20,12 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void IntentMoveForward(float Trow);
+
+	UFUNCTION(BlueprintCallable)
+	void Initialise(UTankTrack*LeftTrackToSet, UTankTrack*RightTrackToSet);
 	
-	
+private:
+	UTankTrack * LeftTrack = nullptr;
+	UTankTrack * RightTrack = nullptr;
+
 };
